@@ -32,7 +32,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
 
 import com.buptsse.spm.domain.Course;
+import com.buptsse.spm.domain.User;
 import com.buptsse.spm.service.ISelectCourseService;
+import com.buptsse.spm.service.IUserService;
 import com.opensymphony.xwork2.ActionSupport;
 
 
@@ -58,6 +60,8 @@ public class UploadAction extends ActionSupport{
 	@Resource
 	private ISelectCourseService selectCourseService;	
 	
+	@Resource
+	private IUserService userService;
 
 
 	/**
@@ -185,6 +189,55 @@ public class UploadAction extends ActionSupport{
 		return null;
 	}	
 	
+	
+	/**
+	 * 上传人员名单
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public String uploadUserFile() throws FileNotFoundException, IOException {
+		String msg = "";
+		
+		try {
+		    //判断文件类型
+			String[][] userList = getData(file.get(0),1);
+			
+			int rowNum= userList.length;
+			if(rowNum>0){
+				for(int i=0;i<rowNum;++i){	
+					User user = new User();
+					user.setUserId(userList[i][1].substring(0, userList[i][1].length()-3));
+					user.setId(userList[i][1].substring(0, userList[i][1].length()-3));
+					user.setUserName(userList[i][2].substring(0, userList[i][2].length()-3));
+					user.setPassword(userList[i][3].substring(0, userList[i][3].length()-3));
+					user.setPosition(userList[i][4].substring(0, userList[i][4].length()-3));
+					user.setEmail(userList[i][5].substring(0, userList[i][5].length()-3));
+					user.setVideoTime(0);				
+
+					if("".equals(user.getUserId())){
+						msg = "人员名单上传失败，表格中学生学号不能为空！";	
+						break;
+					}else{
+						userService.addUser(user);
+						msg = "人员名单上传成功！";	
+					}
+				}				
+			}else{
+				msg = "无人员数据，请重新选择文件！";	
+			}
+
+			
+		} catch (Exception ex) {
+			msg = "人员名单上传失败，请重新选择文件";	
+			System.out.println("人员名单上传失败!");
+			ex.printStackTrace();
+		} 
+		
+		ServletActionContext.getResponse().getWriter().write(msg);
+		
+		return null;
+	}
 	
 	
 	

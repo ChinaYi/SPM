@@ -56,6 +56,11 @@
 			<result name="error">jsp/register.jsp</result>
 		</action>			
 		
+		<!-- 上传人员名单 -->
+		<action name="uploadUserFile" method="uploadUserFile" class="uploadAction">
+			<result name="success"></result>
+			<result name="error">error/error.jsp</result>
+		</action>
 		
 		<!-- 查询课程信息 -->
 		<action name="courseQuery" method="listCourse" class="courseAction">
