@@ -200,12 +200,13 @@ public class UploadAction extends ActionSupport{
 		String msg = "";
 		
 		try {
-		    //判断文件类型
+		    //判断文件类型 将excel转换为二维数字 行为单个用户 列为用户信息
 			String[][] userList = getData(file.get(0),1);
 			
 			int rowNum= userList.length;
 			if(rowNum>0){
 				for(int i=0;i<rowNum;++i){	
+					//列 0-序号 1-用户id 2-用户名称 3-密码 4-用户身份 5-email
 					User user = new User();
 					user.setUserId(userList[i][1].substring(0, userList[i][1].length()-3));
 					user.setId(userList[i][1].substring(0, userList[i][1].length()-3));
@@ -213,6 +214,7 @@ public class UploadAction extends ActionSupport{
 					user.setPassword(userList[i][3].substring(0, userList[i][3].length()-3));
 					user.setPosition(userList[i][4].substring(0, userList[i][4].length()-3));
 					user.setEmail(userList[i][5].substring(0, userList[i][5].length()-3));
+					//用户学习进度初始化为0
 					user.setVideoTime(0);				
 
 					if("".equals(user.getUserId())){
